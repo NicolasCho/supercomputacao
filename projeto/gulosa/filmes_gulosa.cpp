@@ -61,6 +61,7 @@ int main(){
     for(auto& el:lista_filmes){
         cout << el.id << " ";
     }
+    
     cout << endl;
     return 0;
 }
