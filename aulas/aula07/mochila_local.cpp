@@ -23,7 +23,6 @@ int main(){
     int w = 0;
 
     vector<item> itens_shuffled;
-    vector<item> itens_shuffled_batch;
     vector<item> mochila;
 
     cin >> n >> w;
@@ -36,47 +35,37 @@ int main(){
         cin >> peso;
         cin >> valor;
         itens_shuffled.push_back({i, peso, valor});
-        itens_shuffled_batch.push_back({i, peso, valor});
     }
 
-    vector<item> best_knapsack;
-    int best_value = 0;
-    for (int e = 0; e < 10; e++){
-        // mistura 
-        shuffle(itens_shuffled_batch.begin(), itens_shuffled_batch.end(),shuffler);
+    // mistura 
+    shuffle(itens_shuffled.begin(), itens_shuffled.end(),shuffler);
 
-        //Solução inicial aleatória
-        peso = 0;
-        valor = 0;
-        int i = 0;
-        for(auto& el : itens_shuffled_batch){
-            if(distribution(generator) > 0.5){
-                if(el.peso + peso <= w){
-                    mochila.push_back(el);
-                    peso += el.peso;
-                    valor += el.valor;
-                    itens_shuffled_batch.erase(itens_shuffled_batch.begin()+i);
-                    i-=1;
-                }
-            }
-            i+=1;
-        }  
-
-        //Põe em ordem e checa por novos itens
-        sort(itens_shuffled_batch.begin(), itens_shuffled_batch.end(), [](auto& i, auto& j){return i.valor > j.valor;});
-        for(auto& el : itens_shuffled_batch){
+    //Solução inicial aleatória
+    peso = 0;
+    valor = 0;
+    int i = 0;
+    for(auto& el : itens_shuffled){
+        if(distribution(generator) > 0.5){
             if(el.peso + peso <= w){
                 mochila.push_back(el);
                 peso += el.peso;
                 valor += el.valor;
+                itens_shuffled.erase(itens_shuffled.begin()+i);
+                i-=1;
             }
-        } 
-
-        if( valor > best_value){
-            best_knapsack = mochila;
         }
-        mochila.clear();
-    }
+        i+=1;
+    }  
+
+    //Põe em ordem e checa por novos itens
+    sort(itens_shuffled.begin(), itens_shuffled.end(), [](auto& i, auto& j){return i.valor > j.valor;});
+    for(auto& el : itens_shuffled){
+        if(el.peso + peso <= w){
+            mochila.push_back(el);
+            peso += el.peso;
+            valor += el.valor;
+        }
+    } 
     
     sort(mochila.begin(), mochila.end(), [](auto& i, auto& j){return i.id < j.id;});
         for(auto& el:mochila){
@@ -86,7 +75,3 @@ int main(){
     return 0;
     
 }
-/*
-Fazer tudo que for possivel por referencias
-Alocar toda memoria que voce sabe que vai usar para evitar realocamento
-*/
