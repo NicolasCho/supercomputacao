@@ -1,10 +1,18 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-
+#include <random>
+#include <chrono>
 using namespace std;
 
+
+
+
 int main(){
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine generator (seed);
+    std::uniform_real_distribution<double> distribution(0.0, 1.0);
+
     struct filme{
         int id;
         int inicio;
@@ -39,23 +47,57 @@ int main(){
         filmes.push_back({i, inicio, fim, fim - inicio, categoria});
     }
 
-    // Ordena por ordem crescente de hora de fim
+    // Ordena por ordem crescente de hora de fim (GULOSA)
     sort(filmes.begin(), filmes.end(), [](auto& i, auto& j){return i.fim < j.fim;}); 
 
+    // Vetor de horários
+    vector<int> horarios (24, 0);
+
     int i = 0;
+    bool disponivel;
     for(auto& el : filmes){
-        if(i == 0){
-            lista_filmes.push_back(el);
-            i += 1;
-        }
-        else if(el.inicio >= lista_filmes[i-1].fim && categorias[el.categoria-1] != 0){
-            lista_filmes.push_back(el);
-            categorias[el.categoria-1] -= 1; 
-            i += 1;
+        disponivel = true;
+        // 25% de chance de pegar outro filme (ALEATORIEDADE)
+        if(distribution(generator) > 0.75 && i < n){
+            std::uniform_int_distribution<int> distributionInt(i, n-1);
+            int p  = distributionInt(generator);
+
+            if(categorias[filmes[p].categoria-1] != 0){    // Verificação de categoria disponível
+                for(int hora = filmes[p].inicio; hora <= filmes[p].fim; hora++){   // Verificação de horário disponível
+                    if (horarios[hora] == 1){
+                        disponivel = false;
+                        break;
+                    }
+                }
+                if(disponivel){
+                    lista_filmes.push_back(filmes[p]);
+                    categorias[filmes[p].categoria-1] -= 1; 
+                    for(int hora = filmes[p].inicio; hora <= filmes[p].fim; hora++){ 
+                        horarios[hora] = 1;
+                    }
+                    filmes.erase(filmes.begin()+p-1);
+                    n = n - 1;
+                }
+            } 
         }
         else{
-            continue;
+            if(categorias[el.categoria-1] != 0){    // Verificação de categoria disponível
+                for(int hora = el.inicio; hora <= el.fim; hora++){   // Verificação de horário disponível
+                    if (horarios[hora] == 1){
+                        disponivel = false;
+                        break;
+                    }
+                }
+                if(disponivel){
+                    lista_filmes.push_back(el);
+                    categorias[el.categoria-1] -= 1; 
+                    for(int hora = el.inicio; hora <= el.fim; hora++){ 
+                        horarios[hora] = 1;
+                    }
+                }
+            } 
         }
+        i += 1;   
     }
 
     for(auto& el:lista_filmes){
