@@ -10,10 +10,11 @@ int main(int argc, char *argv[]) {
     int n = atoi(argv[1]);   //Número de filmes
     int m = atoi(argv[2]);     //Número de categorias = número máximo de filmes por categoria
     int mean = atoi(argv[3]);  // Média de duração dos filmes
-    string filename = (string)argv[1] + "_" + argv[2] + "_" + argv[3] + ".txt";
-
+    string batch_name = (argv[4]);  //Nome do diretório
+    string filename = (argv[5]);  //Nome do arquivo
+ 
     ofstream inputFile;
-    string input_path = "../inputs/" + filename;
+    string input_path = "../inputs/" + batch_name + "/" + filename;
     inputFile.open(input_path);
     inputFile << n << " " << m << endl;
 
