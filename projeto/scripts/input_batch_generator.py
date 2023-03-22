@@ -3,7 +3,7 @@ import subprocess
 import sys
 
 def create_directory(batch_name):
-    #Cria diretório, se não existe, para salvar imagens
+    #Cria diretório, se não existe
     path = "../inputs/{}".format(batch_name)
     if not os.path.isdir(path):
         os.makedirs(path)
