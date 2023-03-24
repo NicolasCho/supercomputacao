@@ -1,10 +1,16 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-
+#include <fstream>
+#include <iostream>
 using namespace std;
 
-int main(){
+int main(int argc, char *argv[]){
+    string variavel = argv[1];
+    
+    time_t start, end;
+
+    time(&start);
     struct filme{
         int id;
         int inicio;
@@ -58,10 +64,22 @@ int main(){
         }
     }
 
+    time(&end);
+    double time_taken = double(end - start);
+
+    int duracao_total = 0;
     for(auto& el:lista_filmes){
+        duracao_total += el.duracao;
         cout << el.id << " ";
     }
     
-    cout << endl;
+    // Escreve novo resultado no csv
+    ofstream outputFile;
+    string result_file = "results.csv";
+    outputFile.open(result_file);
+    string result = variavel + "," + to_string(lista_filmes.size()) + "," + to_string(duracao_total) + 
+        "," + to_string(time_taken);
+    outputFile << result << endl;
+
     return 0;
 }
