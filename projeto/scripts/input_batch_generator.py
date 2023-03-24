@@ -14,24 +14,24 @@ def create_directory(batch_name):
 
 def generate_inputs_movies(batch_name, n_mov, m, len_mean):
     for i in range(0, int(n_mov), 10):
-        proc = subprocess.Popen(["./../gerador/gerador", str(i), m, len_mean, batch_name, "in"+str(i)])
+        proc = subprocess.Popen(["./../gerador/gerador", str(i), m, len_mean, batch_name, "in"+str(i)+".txt"])
         proc.wait()
 
 def generate_inputs_categories(batch_name, n_mov, m, len_mean):
     for i in range(0, int(m), 2):
-        proc = subprocess.Popen(["./../gerador/gerador", str(i), m, len_mean, batch_name, "in"+str(i)])
+        proc = subprocess.Popen(["./../gerador/gerador", str(i), m, len_mean, batch_name, "in"+str(i)+".txt"])
         proc.wait()
 
 def generate_inputs_mean(batch_name, n_mov, m, len_mean):
     for i in range(int(len_mean)):
-        proc = subprocess.Popen(["./../gerador/gerador", str(i), m, len_mean, batch_name, "in"+str(i)])
+        proc = subprocess.Popen(["./../gerador/gerador", str(i), m, len_mean, batch_name, "in"+str(i)+".txt"])
         proc.wait()
 
 if __name__ == "__main__":
     n_movies = sys.argv[1]      #Número de filmes por arquivo
     m = sys.argv[2]             #Número de categorias
     length_mean = sys.argv[3]   #Média de duração
-    variable = sys.argv[4]
+    variable = sys.argv[4]      #Qual variável iterar
 
     if variable == "filme":
         batch_name = "VARIAVEL_FILME_" + n_movies + "filmes_" + m + "categorias_" + length_mean + "media"  
