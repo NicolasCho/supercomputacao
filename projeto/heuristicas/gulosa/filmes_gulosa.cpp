@@ -44,7 +44,10 @@ int main(int argc, char *argv[]){
         cin >> fim;
         cin >> categoria;
         if (inicio > fim){
-                continue;
+            continue;
+        }
+        if (inicio == fim){
+            fim += 1; 
         }
         filmes.push_back({i, inicio, fim, fim - inicio, categoria});
     }
