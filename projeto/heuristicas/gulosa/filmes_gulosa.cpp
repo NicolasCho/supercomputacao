@@ -6,8 +6,9 @@
 using namespace std;
 
 int main(int argc, char *argv[]){
-    string variavel = argv[1];
-    
+    //Recebe o nome da variavel testada
+    string variavel = argv[1]; 
+
     time_t start, end;
 
     time(&start);
@@ -42,6 +43,9 @@ int main(int argc, char *argv[]){
         cin >> inicio;
         cin >> fim;
         cin >> categoria;
+        if (inicio > fim){
+                continue;
+        }
         filmes.push_back({i, inicio, fim, fim - inicio, categoria});
     }
 
@@ -54,13 +58,10 @@ int main(int argc, char *argv[]){
             lista_filmes.push_back(el);
             i += 1;
         }
-        else if(el.inicio >= lista_filmes[i-1].fim && categorias[el.categoria-1] != 0){
+        if(el.inicio >= lista_filmes[i-1].fim && categorias[el.categoria-1] != 0){
             lista_filmes.push_back(el);
             categorias[el.categoria-1] -= 1; 
             i += 1;
-        }
-        else{
-            continue;
         }
     }
 
@@ -70,13 +71,13 @@ int main(int argc, char *argv[]){
     int duracao_total = 0;
     for(auto& el:lista_filmes){
         duracao_total += el.duracao;
-        cout << el.id << " ";
     }
     
     // Escreve novo resultado no csv
+    // Métricas: número de filmes alocados, quantidade de horas ocupadas, tempo de execução
     ofstream outputFile;
     string result_file = "results.csv";
-    outputFile.open(result_file);
+    outputFile.open(result_file, ios::app);
     string result = variavel + "," + to_string(lista_filmes.size()) + "," + to_string(duracao_total) + 
         "," + to_string(time_taken);
     outputFile << result << endl;
