@@ -6,12 +6,13 @@
 #include <fstream>
 using namespace std;
 
-int main(){
-    //Recebe o nome da variavel testada
+int main(int argc, char *argv[]){
+    //Recebe o nome da variavel testada e o nome do arquivo
     string variavel = argv[1]; 
+    string arquivo = argv[2];
 
-    time_t start, end;
-    time(&start);
+    clock_t start, end;
+    start = clock();
 
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::default_random_engine generator (seed);
@@ -110,8 +111,8 @@ int main(){
         i += 1;   
     }
 
-    time(&end);
-    double time_taken = double(end - start);
+    end = clock();
+    double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
 
     int duracao_total = 0;
     for(auto& el:lista_filmes){
@@ -121,12 +122,11 @@ int main(){
     // Escreve novo resultado no csv
     // Métricas: número de filmes alocados, quantidade de horas ocupadas, tempo de execução
     ofstream outputFile;
-    string result_file = "results.csv";
+    string result_file = "../heuristicas/gulosa_aleatoria/results.csv";  // Caminho relativo ao script que chama a heuristica
     outputFile.open(result_file, ios::app);
     string result = variavel + "," + to_string(lista_filmes.size()) + "," + to_string(duracao_total) + 
-        "," + to_string(time_taken);
+        "," + to_string(time_taken) + "," + arquivo;
     outputFile << result << endl;
 
-    
     return 0;
 }

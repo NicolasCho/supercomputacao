@@ -10,8 +10,8 @@ int main(int argc, char *argv[]){
     string variavel = argv[1]; 
     string arquivo = argv[2];
 
-    time_t start, end;
-    time(&start);
+    clock_t start, end;
+    start = clock();
     
     struct filme{
         int id;
@@ -23,6 +23,7 @@ int main(int argc, char *argv[]){
 
     int n = 0;
     int c = 0;
+
 
     vector<filme> filmes;
     vector<int> categorias;
@@ -55,7 +56,6 @@ int main(int argc, char *argv[]){
 
     // Ordena por ordem crescente de hora de fim
     sort(filmes.begin(), filmes.end(), [](auto& i, auto& j){return i.fim < j.fim;}); 
-
     int i = 0;
     for(auto& el : filmes){
         if(i == 0){
@@ -69,8 +69,8 @@ int main(int argc, char *argv[]){
         }
     }
 
-    time(&end);
-    double time_taken = double(end - start);
+    end = clock();
+    double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
 
     int duracao_total = 0;
     for(auto& el:lista_filmes){
@@ -80,11 +80,10 @@ int main(int argc, char *argv[]){
     // Escreve novo resultado no csv
     // Métricas: número de filmes alocados, quantidade de horas ocupadas, tempo de execução
     ofstream outputFile;
-    string result_file = "results.csv";
+    string result_file = "../heuristicas/gulosa/results.csv";  // Caminho relativo ao script que chama a heuristica
     outputFile.open(result_file, ios::app);
     string result = variavel + "," + to_string(lista_filmes.size()) + "," + to_string(duracao_total) + 
         "," + to_string(time_taken) + "," + arquivo;
     outputFile << result << endl;
-
     return 0;
 }
