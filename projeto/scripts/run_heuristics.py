@@ -11,7 +11,7 @@ if __name__ == "__main__":
         if os.path.exists(dir_heu + "results.csv"):
             os.remove(dir_heu + "results.csv")
         f = open(dir_heu + "results.csv", "a")
-        f.write("variavel,numero_filmes,alocacao_tempo,tempo_execucao")
+        f.write("variavel,numero_filmes,alocacao_tempo,tempo_execucao,nome_arquivo\n")
         f.close()
 
         f_heu = dir_heu + "/filmes_" + heuristica
