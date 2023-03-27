@@ -10,8 +10,8 @@ int main(int argc, char *argv[]){
     string variavel = argv[1]; 
 
     time_t start, end;
-
     time(&start);
+    
     struct filme{
         int id;
         int inicio;

@@ -3,12 +3,16 @@
 #include <algorithm>
 #include <random>
 #include <chrono>
+#include <fstream>
 using namespace std;
 
-
-
-
 int main(){
+    //Recebe o nome da variavel testada
+    string variavel = argv[1]; 
+
+    time_t start, end;
+    time(&start);
+
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::default_random_engine generator (seed);
     std::uniform_real_distribution<double> distribution(0.0, 1.0);
@@ -44,6 +48,12 @@ int main(){
         cin >> inicio;
         cin >> fim;
         cin >> categoria;
+        if (inicio > fim){
+            continue;
+        }
+        if (inicio == fim){
+            fim += 1; 
+        }
         filmes.push_back({i, inicio, fim, fim - inicio, categoria});
     }
 
@@ -100,10 +110,23 @@ int main(){
         i += 1;   
     }
 
+    time(&end);
+    double time_taken = double(end - start);
+
+    int duracao_total = 0;
     for(auto& el:lista_filmes){
-        cout << el.id << " ";
+        duracao_total += el.duracao;
     }
+
+    // Escreve novo resultado no csv
+    // Métricas: número de filmes alocados, quantidade de horas ocupadas, tempo de execução
+    ofstream outputFile;
+    string result_file = "results.csv";
+    outputFile.open(result_file, ios::app);
+    string result = variavel + "," + to_string(lista_filmes.size()) + "," + to_string(duracao_total) + 
+        "," + to_string(time_taken);
+    outputFile << result << endl;
+
     
-    cout << endl;
     return 0;
 }
