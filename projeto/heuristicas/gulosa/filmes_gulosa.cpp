@@ -6,8 +6,9 @@
 using namespace std;
 
 int main(int argc, char *argv[]){
-    //Recebe o nome da variavel testada
+    //Recebe o nome da variavel testada e o nome do arquivo
     string variavel = argv[1]; 
+    string arquivo = argv[2];
 
     time_t start, end;
     time(&start);
@@ -82,7 +83,7 @@ int main(int argc, char *argv[]){
     string result_file = "results.csv";
     outputFile.open(result_file, ios::app);
     string result = variavel + "," + to_string(lista_filmes.size()) + "," + to_string(duracao_total) + 
-        "," + to_string(time_taken);
+        "," + to_string(time_taken) + "," + arquivo;
     outputFile << result << endl;
 
     return 0;
