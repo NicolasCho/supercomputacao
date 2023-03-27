@@ -8,7 +8,7 @@ Criar ambiente virtual
 
 Ativar ambiente
 
-    ./venv/Scripts/activate
+    source venv/bin/activate
 
 Instalar dependências
 
