@@ -42,3 +42,9 @@ de cada batch de teste rodado (diretórios de input)
 ## Para realizar a análise
 
 Os gráficos são gerados no jupyter notebook **analysis.ipynb** dentro de *scripts*
+
+## Valgrind
+
+Dentro do diretório da heurística para testar:
+
+    valgrind --tool=callgrind ./{nome do executavel} filme in10000.txt < ../../inputs/VARIAVEL_FILME_10010filmes_5categorias_2media/in10000.txt

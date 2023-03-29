@@ -61,14 +61,14 @@
 <h2>Pipeline do projeto</h2>
 
 <h3>Gerando inputs</h3>
-<p>Para gerar os inputs como descrito na seção anterior, utiliza-se do script <b>input_batch_generator.py</b> localizado no diretótio <b>scripts</b>.
+<p>Para gerar os inputs como descrito na sessão anterior, utiliza-se do script <b>input_batch_generator.py</b> localizado no diretótio <b>scripts</b>.
     Esse script de geração recebe como argumentos os valores das variáveis e qual variável será iterada (testada). Como resultado, o script gera um novo
     diretório contendo o batch de inputs correspondente aos argumentos passados.</p>
 <p>Os comandos para rodar o script estão detalhados no <b>READ.ME</b> da raíz deste projeto</p>
 
 <h3>Executando o algoritmo</h3>
 <p>A execução do algoritmo se dá pelo script <b>run_heuristics.py</b> localizado em <b>scripts</b>. Esse script itera sobre as heurísticas presentes 
-    no diretório <b>heurisitcas</b> e, para cada heurística, testa com todos os batches de input gerados na seção anterior. O resultado de cada teste
+    no diretório <b>heurisitcas</b> e, para cada heurística, testa com todos os batches de input gerados na sessão anterior. O resultado de cada teste
     é armazenado em um arquivo csv no diretório da heurística (<b>results.csv</b>)</p>
 
 <h3>Analisando desempenho</h3>
@@ -76,123 +76,169 @@
     presentes nos csv's de resultado e armazena-os em dataframes (pandas). Assim é possível gerar gráficos e realizar medidas mais facilmente dos resultados coletados</p>
 
 <h2>Heurísticas</h2>
-<h3>Gulosa</h3>
-<hr>
-<h4>Input</h4>
+<div>
+    <h3>Gulosa</h3>
+    <hr>
+    <h4>Input</h4>
 
-<p>O programa recebe como argumentos de linha de comando:</p>
-<ul>
-    <li>Nome da variável testada</li>
-    <li>Nome do arquivo de input</li>
-</ul>
-<p>Em seguida, recebe do arquivo de input:</p>
-<ul>
-    <li><b>n</b>: Número de filmes no arquivo de input</li>
-    <li><b>c</b>: Número total de categorias no arquivo de input</li>
-</ul>
-<p>Além disso, armazena o número máximo de filmes possíveis por categoria em um vetor:<br>
-    Ex: Para o exemplo de input dado no começo do relatório, o vetor seria [1, 3, 1, 2]<br><br>
+    <p>O programa recebe como argumentos de linha de comando:</p>
+    <ul>
+        <li>Nome da variável testada</li>
+        <li>Nome do arquivo de input</li>
+    </ul>
+    <p>Em seguida, recebe do arquivo de input:</p>
+    <ul>
+        <li><b>n</b>: Número de filmes no arquivo de input</li>
+        <li><b>c</b>: Número total de categorias no arquivo de input</li>
+    </ul>
+    <p>Além disso, armazena o número máximo de filmes possíveis por categoria em um vetor:<br>
+        Ex: Para o exemplo de input dado no começo do relatório, o vetor seria [1, 3, 1, 2]<br><br>
 
-    Por fim, itera sobre as linhas do arquivo de input, armazenando os filmes em um vetor:</p>
+        Por fim, itera sobre as linhas do arquivo de input, armazenando os filmes em um vetor:</p>
 
-    <img src="imgs/input_gulosa.png" alt="leitura do input">
+        <img src="imgs/input_gulosa.png" alt="leitura do input">
 
-<p>Os filmes são definidos por um struct <b>filme</b> com os campos de:</p>
-<ul>
-    <li><b>id</b></li>
-    <li><b>inicio</b></li>
-    <li><b>fim</b></li>
-    <li><b>duracao</b></li>
-    <li><b>categoria</b></li>
-</ul>
-
-
-<p>É importante notar que os filmes que terminam após as 23 horas e os que iniciam e terminam na mesma hora, não serão considerados e, portanto, são retirados da lista</p>
-
-<h4>Funcionamento</h4>
-<p>A heurística consiste constantemente utilizar uma estratégia ótima para contextos locais, esperando encontrar um ótimo em contexto global como resultado.
-    No caso o algoritmo sempre irá escolher o filme que tem o horário de encerramento mais cedo.<br>
-    Para aplicar a heurística, primeiro ordena-se todos os filmes por horário de encerramento (do mais cedo para o mais tarde).
-    Em seguida, itera-se sobre os filmes, aramazenando-os na lista resultado e reduzindo em 1 o valor da categoria correspondente ao filme no vetor
-    de categorias. <br>
-    Antes de adicionar um filme é necessário verificar:
-    <ol>
-        <li>Se o filme que irá ser adicionado possui um horário de inicio posterior ao horário de fim do último filme adicionado a lista.</li>
-        <li>Se a categoria do filme ainda permite a adição de mais filmes</li>
-    </ol>
-    Se passar nas duas condições, o filme é adicionado.
-</p>
-
-<img src="imgs/funcionamento_gulosa.png" alt="heuristica gulosa">
-
-<h4>Output</h4>
-<p>O número de filmes alocados, o tempo de alocação total no dia e o tempo de execução são armazenados em uma nova entrada no arquivo csv do mesmo diretório (<b>results.csv</b>)</p>
-
-<img src="imgs/output_gulosa.png" alt="escreve output">
+    <p>Os filmes são definidos por um struct <b>filme</b> com os campos de:</p>
+    <ul>
+        <li><b>id</b></li>
+        <li><b>inicio</b></li>
+        <li><b>fim</b></li>
+        <li><b>duracao</b></li>
+        <li><b>categoria</b></li>
+    </ul>
 
 
-<h3>Aleatória</h3>
-<hr>
-<h4>Input</h4>
+    <p>É importante notar que os filmes que terminam após as 23 horas e os que iniciam e terminam na mesma hora, não serão considerados e, portanto, são retirados da lista</p>
 
-<p>O programa recebe como argumentos de linha de comando:</p>
-<ul>
-    <li>Nome da variável testada</li>
-    <li>Nome do arquivo de input</li>
-</ul>
-<p>Em seguida, recebe do arquivo de input:</p>
-<ul>
-    <li><b>n</b>: Número de filmes no arquivo de input</li>
-    <li><b>c</b>: Número total de categorias no arquivo de input</li>
-</ul>
-<p>Além disso, armazena o número máximo de filmes possíveis por categoria em um vetor:<br>
-    Ex: Para o exemplo de input dado no começo do relatório, o vetor seria [1, 3, 1, 2]<br><br>
+    <h4>Funcionamento</h4>
+    <p>A heurística consiste constantemente utilizar uma estratégia ótima para contextos locais, esperando encontrar um ótimo em contexto global como resultado.
+        No caso o algoritmo sempre irá escolher o filme que tem o horário de encerramento mais cedo.<br>
+        Para aplicar a heurística, primeiro ordena-se todos os filmes por horário de encerramento (do mais cedo para o mais tarde).
+        Em seguida, itera-se sobre os filmes, aramazenando-os na lista resultado e reduzindo em 1 o valor da categoria correspondente ao filme no vetor
+        de categorias. <br>
+        Antes de adicionar um filme é necessário verificar:
+        <ol>
+            <li>Se o filme que irá ser adicionado possui um horário de inicio posterior ao horário de fim do último filme adicionado a lista.</li>
+            <li>Se a categoria do filme ainda permite a adição de mais filmes</li>
+        </ol>
+        Se passar nas duas condições, o filme é adicionado.
+    </p>
 
-    Por fim, itera sobre as linhas do arquivo de input, armazenando os filmes em um vetor:</p>
+    <img src="imgs/funcionamento_gulosa.png" alt="heuristica gulosa">
 
-    <img src="imgs/input_gulosa.png" alt="leitura do input">
+    <h4>Output</h4>
+    <p>O número de filmes alocados, o tempo de alocação total no dia e o tempo de execução são armazenados em uma nova entrada no arquivo csv do mesmo diretório (<b>results.csv</b>)</p>
 
-<p>Os filmes são definidos por um struct <b>filme</b> com os campos de:</p>
-<ul>
-    <li><b>id</b></li>
-    <li><b>inicio</b></li>
-    <li><b>fim</b></li>
-    <li><b>duracao</b></li>
-    <li><b>categoria</b></li>
-</ul>
+    <img src="imgs/output_gulosa.png" alt="escreve output">
 
+    <h4>Profiling</h4>
+    <p>O profiling foi realizado com um arquivo de input contendo 10000 filmes e 5 categorias.<br>
+        No total o programa executou 38,232,014 instruções (considerando a execução de outros arquivos envolvidos nas bibliotecas utilizadas).<br><br>
 
-<p>É importante notar que os filmes que terminam após as 23 horas e os que iniciam e terminam na mesma hora, não serão considerados e, portanto, são retirados da lista</p>
+        <img src="imgs/profiling/prof_gulosa0.png">
 
-<h4>Funcionamento</h4>
-<p>Diferente da heurística gulosa, a aleatória tem um caráter mais abrangente (<b>exploration</b>) em relação as soluções encontradas.
-    No caso o algoritmo utiliza-se da aleatorização para causar imprevisibilidade e definir caminhos para soluções que não seriam encontradas pela heurística anterior.<br>
-    Para esse algoritmo será implementada uma aleatorização em função da heurística anterior, ou seja, o vetor de filmes será ordenado com base no horário de término de cada filme,
-    e o vetor será iterado nessa ordem.
-    Porém, o algoritmo define que exista uma chance de 25% de não escolher o próximo filme do vetor para verificação de inclusão. Assim, será escolhido um filme aleatório no vetor
-    para verificação.<br>
+        <br><br>
+        A leitura e alocação dos filmes do input em vetores são os maiores responsáveis pelo número de intrução: mais de 89% das instruções.
+        A execução do algoritmo em si foi responsável por apenas 0.68% das instruções totais. A ordenação dos filmes por horário de término, a parte mais custosa da heurística, 
+        foi responsável por 0.38% das instruções.
 
-    Antes de adicionar um filme é necessário verificar:
-    <ol>
-        <li>Se o filme que irá ser adicionado não conflita com o horário de nenhum outro filme já incluso no resultado</li>
-        <li>Se a categoria do filme ainda permite a adição de mais filmes</li>
-    </ol>
-    Para a primeira verificação é necessário criar um vetor de horários que mapeia se o horário está disponível ou não (bitmap -> vetor de 0 e 1). Quando um filme for alocado,
-    os horários correspondentes no bitmap mudarão de 0 para 1.<br>
-    Se passar nas duas condições, o filme é adicionado.
-</p>
+        <br><br>
+        <img src="imgs/profiling/prof_gulosa1.png">
 
-<img src="imgs/funcionamento_aleat1.png" alt="heuristica aleatoria 1">
-<br>
-<br>
+        <br><br>
+        <img src="imgs/profiling/prof_gulosa2.png">
 
-<img src="imgs/funcionamento_aleat2.png" alt="heuristica aleatoria 2">
+    </p>
 
 
-<h4>Output</h4>
-<p>O número de filmes alocados, o tempo de alocação total no dia e o tempo de execução são armazenados em uma nova entrada no arquivo csv do mesmo diretório (<b>results.csv</b>)</p>
+</div>
 
-<img src="imgs/output_gulosa.png" alt="escreve output">
+<div>
+    <h3>Aleatória</h3>
+    <hr>
+    <h4>Input</h4>
+
+    <p>O programa recebe como argumentos de linha de comando:</p>
+    <ul>
+        <li>Nome da variável testada</li>
+        <li>Nome do arquivo de input</li>
+    </ul>
+    <p>Em seguida, recebe do arquivo de input:</p>
+    <ul>
+        <li><b>n</b>: Número de filmes no arquivo de input</li>
+        <li><b>c</b>: Número total de categorias no arquivo de input</li>
+    </ul>
+    <p>Além disso, armazena o número máximo de filmes possíveis por categoria em um vetor:<br>
+        Ex: Para o exemplo de input dado no começo do relatório, o vetor seria [1, 3, 1, 2]<br><br>
+
+        Por fim, itera sobre as linhas do arquivo de input, armazenando os filmes em um vetor:</p>
+
+        <img src="imgs/input_gulosa.png" alt="leitura do input">
+
+    <p>Os filmes são definidos por um struct <b>filme</b> com os campos de:</p>
+    <ul>
+        <li><b>id</b></li>
+        <li><b>inicio</b></li>
+        <li><b>fim</b></li>
+        <li><b>duracao</b></li>
+        <li><b>categoria</b></li>
+    </ul>
+
+
+    <p>É importante notar que os filmes que terminam após as 23 horas e os que iniciam e terminam na mesma hora, não serão considerados e, portanto, são retirados da lista</p>
+
+    <h4>Funcionamento</h4>
+    <p>Diferente da heurística gulosa, a aleatória tem um caráter mais abrangente (<b>exploration</b>) em relação as soluções encontradas.
+        No caso o algoritmo utiliza-se da aleatorização para causar imprevisibilidade e definir caminhos para soluções que não seriam encontradas pela heurística anterior.<br>
+        Para esse algoritmo será implementada uma aleatorização em função da heurística anterior, ou seja, o vetor de filmes será ordenado com base no horário de término de cada filme,
+        e o vetor será iterado nessa ordem.
+        Porém, o algoritmo define que exista uma chance de 25% de não escolher o próximo filme do vetor para verificação de inclusão. Assim, será escolhido um filme aleatório no vetor
+        para verificação.<br>
+
+        Antes de adicionar um filme é necessário verificar:
+        <ol>
+            <li>Se o filme que irá ser adicionado não conflita com o horário de nenhum outro filme já incluso no resultado</li>
+            <li>Se a categoria do filme ainda permite a adição de mais filmes</li>
+        </ol>
+        Para a primeira verificação é necessário criar um vetor de horários que mapeia se o horário está disponível ou não (bitmap -> vetor de 0 e 1). Quando um filme for alocado,
+        os horários correspondentes no bitmap mudarão de 0 para 1.<br>
+        Se passar nas duas condições, o filme é adicionado.
+    </p>
+
+    <img src="imgs/funcionamento_aleat1.png" alt="heuristica aleatoria 1">
+    <br>
+    <br>
+
+    <img src="imgs/funcionamento_aleat2.png" alt="heuristica aleatoria 2">
+
+
+    <h4>Output</h4>
+    <p>O número de filmes alocados, o tempo de alocação total no dia e o tempo de execução são armazenados em uma nova entrada no arquivo csv do mesmo diretório (<b>results.csv</b>)</p>
+
+    <img src="imgs/output_gulosa.png" alt="escreve output">
+
+    <h4>Profiling</h4>
+    <p>O profiling foi realizado com um arquivo de input contendo 10000 filmes e 5 categorias.<br>
+        No total o programa executou 39,556,303 instruções (considerando a execução de outros arquivos envolvidos nas bibliotecas utilizadas).<br><br>
+
+        <img src="imgs/profiling/prof_aleat0.png"> <br><br>
+
+        A leitura e alocação dos filmes do input em vetores são os maiores responsáveis pelo número de intrução: mais de 86% das instruções.<br><br>
+
+        <img src="imgs/profiling/prof_aleat1.png"><br><br>
+        <img src="imgs/profiling/prof_aleat2.png"><br><br>
+
+        A execução do algoritmo em si foi responsável por apenas 0.8% das instruções totais. Destaca-se a ordenação proveniente da heurística gulosa no programa, que é responsável
+        por 0.38% das instruções totais (similar ao profiling da heurística gulosa).<br>
+
+        <img src="imgs/profiling/prof_aleat3.png"><br><br>
+        <img src="imgs/profiling/prof_aleat4.png"><br><br>
+        <img src="imgs/profiling/prof_aleat5.png"><br>
+
+    </p>
+</div>
+
+
 
 
 <h2>Resultados</h2>
