@@ -32,6 +32,7 @@ int main(int argc, char *argv[]){
     //n = numero de filmes;  c = numero de categorias
     cin >> n >> c;
 
+    //Vetor de categorias
     int n_filmes_categoria;
     for (int i = 0; i < c; i++){
         cin >> n_filmes_categoria;
@@ -40,6 +41,7 @@ int main(int argc, char *argv[]){
 
     filmes.reserve(n); // reserva o espaço na memoria
 
+    //Vetor de filmes
     int inicio, fim, categoria;
     for (int i = 0; i < n; i++){
         cin >> inicio;
@@ -62,6 +64,7 @@ int main(int argc, char *argv[]){
             lista_filmes.push_back(el);
             i += 1;
         }
+        //Verifica se horário é válido e se a categoria permite adição a lista
         if(el.inicio >= lista_filmes[i-1].fim && categorias[el.categoria-1] != 0){
             lista_filmes.push_back(el);
             categorias[el.categoria-1] -= 1; 

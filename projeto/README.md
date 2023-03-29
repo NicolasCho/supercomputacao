@@ -41,3 +41,4 @@ de cada batch de teste rodado (diretórios de input)
 
 ## Para realizar a análise
 
+Os gráficos são gerados no jupyter notebook **analysis.ipynb** dentro de *scripts*
