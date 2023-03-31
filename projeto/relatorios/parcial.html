@@ -266,17 +266,18 @@
     mas rápidamente o fenômeno estabiliza-se, mantendo o desempenho quase inalterado.<br>
     Em relação ao tempo de execução, ambas as heurísticas apresentam crescimento conforme o número de filmes aumenta, o que é esperado, dado que o algoritmo deve
     iterar sobre o vetor de filme. Entretanto, é possível observar que a heurística aleatória é mais consistente em tempos maiores de execução quando o número de filmes
-    é muito grande. Em contrapartida, a heurística gulosa apresenta tempos menores de execução.
+    é muito grande. A heurística gulosa apresenta tempos mairoes de execução no geral.
 
     <h3>Variando o número de categorias</h3>
 
     <img src="imgs/graficos/fxc.png">
-    <img src="imgs/graficos/fxc.png">
-    <img src="imgs/graficos/fxc.png">
+    <img src="imgs/graficos/hxc.png">
+    <img src="imgs/graficos/exc.png">
 
     <br>
-    Um fenômeno similar ocorre ao variar o número de categorias, se comparado a variação no número de filmes. Ambas as heurísticas melhoram a quantidade de filmes e tempo alocados
-    quanto maior a quantidade de categorias. Mas das curvas acima, percebe-se que a heurística gulosa performa melhor que a aleatória.<br>
-    Em relação ao tempo de excução, é notável que o aumento no número de categorias não influenciou muito a heurística gulosa. Em contrapartida, verifica-se um
-    pico de tempo de execução para a heurística aleatória quando o número de categorias aumentou.
+    Um fenômeno similar ocorre ao variar o número de categorias, se comparado a variação no número de filmes. A heurística gulosa melhora rapidamente a quantidade de filmes e tempo alocados
+    quanto maior a quantidade de categorias, estabilizando-se em altos valores. Já a aleatória também apresenta certa influência, mas de forma bem reduzida,
+    estabilizando-se rapidamente em baixos valores.<br>
+    Em relação ao tempo de excução, é notável que o aumento no número de categorias não influenciou muito a heurística aleatória. Em contrapartida, verifica-se vários
+    picos de tempo de execução para a heurística gulosa quando o número de categorias aumenta, expondo-se maior do que os valores da aleatória.
 </p>

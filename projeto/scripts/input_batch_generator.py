@@ -19,7 +19,7 @@ def generate_inputs_movies(batch_name, n_mov, m, len_mean):
 
 def generate_inputs_categories(batch_name, n_mov, m, len_mean):
     for i in range(0, int(m), 2):
-        proc = subprocess.Popen(["./../gerador/gerador", str(i), m, len_mean, batch_name, "in"+str(i)+".txt"])
+        proc = subprocess.Popen(["./../gerador/gerador", n_mov, str(i), len_mean, batch_name, "in"+str(i)+".txt"])
         proc.wait()
 
 def generate_inputs_mean(batch_name, n_mov, m, len_mean):
