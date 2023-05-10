@@ -6,6 +6,18 @@
 #include <chrono>
 #include <algorithm>
 
+
+//auto sum_func = [] __device__ (int a, int b) { return (a-b)*(a-b); };
+
+
+struct sum_func
+{    
+    __host__ __device__
+    double operator()(const double& x, const double& y) {   //x e y são os vetores
+           return (x - y)*(x - y);  
+    }
+};
+
 int main(){
     int n = 2518;
     thrust::host_vector<double> AAPL(n);
@@ -28,10 +40,8 @@ int main(){
     thrust::device_vector<double> quad_diff(n);
     thrust::fill(medias.begin(), medias.end(), media);
 
-    auto sum_func = [] __device__ (int a, int b) { return (a-b)*(a-b); };
-
     thrust::transform(diff.begin(), diff.end(), medias.begin(), quad_diff.begin(), 
-                        sum_func);
+                        sum_func()); 
     
     double variancia = thrust::reduce(quad_diff.begin(),quad_diff.end(), (double)0, thrust::plus<double>())/n;
 
