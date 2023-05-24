@@ -12,23 +12,14 @@ struct filme{
         int categoria;
 };
 
-struct resultado{
-    int alocacao_total;
-    bool reultado_otimo;
-};
-
-resultado maior_valor(vector<filme> filmes, vector<filme>& assistidos, vector<filme>& melhor, vector<int> categorias, vector<int> horarios){
+int maior_valor(vector<filme> filmes, vector<filme>& assistidos, vector<filme>& melhor, vector<int> categorias, vector<int> horarios){
     vector<filme> filmes2 = filmes; 
     vector<int> horarios2 = horarios;
     int duracao = 0;
-    resultado com_item = {0,false};
+    int com_item = 0;
     bool disponivel = true;
-
-    if (horarios.back() == 0){
-        return resultado{24, true};
-    }
-    if(filmes.empty()){
-        return resultado{0, false};
+    if(filmes.empty() || (horarios.back() == 0)){
+        return 0;
     }
 
     if(categorias[filmes[0].categoria-1] != 0){    // Verificação de categoria disponível
@@ -48,16 +39,10 @@ resultado maior_valor(vector<filme> filmes, vector<filme>& assistidos, vector<fi
             assistidos.push_back(filmes[0]);
             filmes.erase(filmes.begin());
             com_item = maior_valor(filmes, assistidos, melhor, categorias, horarios);  
-            if(com_item.reultado_otimo){
-                return com_item;
-            }
         }
     } 
     filmes2.erase(filmes2.begin());
-    resultado sem_item = maior_valor(filmes2, assistidos, melhor, categorias, horarios2); 
-    if(sem_item.reultado_otimo){
-        return sem_item;
-    }
+    int sem_item = maior_valor(filmes2, assistidos, melhor, categorias, horarios2); 
 
     int valor_atual = 0;
     int valor_melhor = 0;
@@ -71,7 +56,7 @@ resultado maior_valor(vector<filme> filmes, vector<filme>& assistidos, vector<fi
         melhor = assistidos;
     }
     assistidos.clear();
-    return resultado{ max(sem_item.alocacao_total, duracao + com_item.alocacao_total + 1), false};
+    return max(sem_item, duracao + com_item + 1);
 }
 
 int main(){//int argc, char *argv[]){
@@ -119,12 +104,12 @@ int main(){//int argc, char *argv[]){
         filmes.push_back({i, inicio, fim, fim - inicio, categoria});
     }
 
-    resultado maior_tempo_tela = maior_valor(filmes, assistidos, melhor, categorias, horarios);
+    int maior_tempo_tela = maior_valor(filmes, assistidos, melhor, categorias, horarios);
 
     time = omp_get_wtime()-time;
     cout << "Tempo em segundos :" << time << endl;
 
-    cout << "Melhor alocação: " << maior_tempo_tela.alocacao_total << endl;
+    cout << "Melhor alocação: " << maior_tempo_tela << endl;
 
     cout << "Número de filmes alocados: " << melhor.size() << endl;
 
