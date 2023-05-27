@@ -12,67 +12,50 @@ struct filme{
         int categoria;
 };
 
-struct resultado{
-    int alocacao_total;
-    bool reultado_otimo;
-};
-
-resultado maior_valor(vector<filme> filmes, vector<filme>& assistidos, vector<filme>& melhor, vector<int> categorias, vector<int> horarios){
+int maior_valor(vector<filme> filmes, vector<filme>& assistidos, vector<filme>& melhor, vector<int> categorias, vector<int> horarios, int index){
     vector<filme> filmes2 = filmes; 
     vector<int> horarios2 = horarios;
-    int duracao = 0;
-    resultado com_item = {0,false};
+    int adiciona = 0;
+    int com_item = 0;
     bool disponivel = true;
 
-    if (horarios.back() == 0){
-        return resultado{24, true};
-    }
-    if(filmes.empty()){
-        return resultado{0, false};
+
+    if(filmes.empty() || horarios.back() == 0 || index < 0){
+        return 0;
     }
 
-    if(categorias[filmes[0].categoria-1] != 0){    // Verificação de categoria disponível
-        for(int hora = filmes[0].inicio; hora <= filmes[0].fim; hora++){   // Verificação de horário disponível
-            if (horarios[hora] == 1){
+    if(categorias[filmes[index].categoria-1] != 0){    // Verificação de categoria disponível
+        for(int hora = filmes[index].inicio; hora <= filmes[index].fim; hora++){   // Verificação de horário disponível
+            if (horarios[hora] == 1 && hora != filmes[index].fim){
                 disponivel = false;
                 break;
             }
         }
         if(disponivel){
-            duracao = filmes[0].duracao;
-            categorias[filmes[0].categoria-1] -= 1; 
-            for(int hora = filmes[0].inicio; hora <= filmes[0].fim; hora++){ 
+            categorias[filmes[index].categoria-1] -= 1; 
+            for(int hora = filmes[index].inicio; hora < filmes[index].fim; hora++){ 
                 horarios[hora] = 1;
                 horarios.back() -= 1;
             }
-            assistidos.push_back(filmes[0]);
+            assistidos.push_back(filmes[index]);
             filmes.erase(filmes.begin());
-            com_item = maior_valor(filmes, assistidos, melhor, categorias, horarios);  
-            if(com_item.reultado_otimo){
-                return com_item;
-            }
+            com_item = maior_valor(filmes, assistidos, melhor, categorias, horarios, index-1);  
+            adiciona += 1;
         }
     } 
     filmes2.erase(filmes2.begin());
-    resultado sem_item = maior_valor(filmes2, assistidos, melhor, categorias, horarios2); 
-    if(sem_item.reultado_otimo){
-        return sem_item;
-    }
 
-    int valor_atual = 0;
-    int valor_melhor = 0;
-    for(auto& el:assistidos){
-        valor_atual += el.duracao;
-    }
-    for(auto& el:melhor){
-        valor_melhor += el.duracao;
-    }
+    int sem_item = maior_valor(filmes2, assistidos, melhor, categorias, horarios2, index-1);
+
+    int valor_atual = assistidos.size();
+    int valor_melhor = melhor.size();
     if(valor_atual > valor_melhor){
         melhor = assistidos;
     }
     assistidos.clear();
-    return resultado{ max(sem_item.alocacao_total, duracao + com_item.alocacao_total + 1), false};
+    return max(sem_item, adiciona+com_item);
 }
+
 
 int main(){//int argc, char *argv[]){
     float time = omp_get_wtime();
@@ -102,7 +85,7 @@ int main(){//int argc, char *argv[]){
         categorias.push_back(n_filmes_categoria);
     }
 
-    filmes.reserve(n); // reserva o espaço na memoria
+    // filmes.reserve(n); // reserva o espaço na memoria
 
     //Vetor de filmes
     int inicio, fim, categoria;
@@ -119,20 +102,46 @@ int main(){//int argc, char *argv[]){
         filmes.push_back({i, inicio, fim, fim - inicio, categoria});
     }
 
-    resultado maior_tempo_tela = maior_valor(filmes, assistidos, melhor, categorias, horarios);
+    int n_filmes = filmes.size();
+    int max_val = 0;
+    omp_set_num_threads(4);
+
+    #pragma omp parallel
+    {   
+        #pragma omp single
+        {
+            int id, i, nthreads, istart, iend;
+            id = omp_get_thread_num();
+            nthreads = omp_get_num_threads();
+            istart = id*n_filmes /nthreads;
+            iend =(id+1) * n_filmes/nthreads;
+            if (id == nthreads - 1) iend = n_filmes;
+            for (i = istart; i < iend; i++){
+                #pragma omp task shared(max_val)
+                {
+                    int value = maior_valor(filmes, assistidos, melhor, categorias, horarios, i);
+                    #pragma omp critical
+                    {
+                        max_val = std::max(max_val, value);
+                    }
+                }
+            }
+        }
+    }
+    
 
     time = omp_get_wtime()-time;
-    cout << "Tempo em segundos :" << time << endl;
+    std::cout << "Tempo em segundos :" << time << endl;
 
-    cout << "Melhor alocação: " << maior_tempo_tela.alocacao_total << endl;
+    std::cout << "Melhor alocação: " << max_val << endl;
 
-    cout << "Número de filmes alocados: " << melhor.size() << endl;
+    std::cout << "Número de filmes alocados: " << melhor.size() << endl;
 
-    sort(melhor.begin(), melhor.end(), [](auto& i, auto& j){return i.id < j.id;});
+    std::sort(melhor.begin(), melhor.end(), [](auto& i, auto& j){return i.id < j.id;});
     for(auto& el:melhor){
-        cout << el.id << " ";
+        std::cout << el.id << " ";
     }
-    cout << endl;
+    std::cout << endl;
 
     return 0;
 }

@@ -15,48 +15,45 @@ struct filme{
 int maior_valor(vector<filme> filmes, vector<filme>& assistidos, vector<filme>& melhor, vector<int> categorias, vector<int> horarios){
     vector<filme> filmes2 = filmes; 
     vector<int> horarios2 = horarios;
-    int duracao = 0;
+    int adiciona = 0;
     int com_item = 0;
     bool disponivel = true;
-    if(filmes.empty() || (horarios.back() == 0)){
+
+
+    if(filmes.empty() || horarios.back() == 0){
         return 0;
     }
 
     if(categorias[filmes[0].categoria-1] != 0){    // Verificação de categoria disponível
         for(int hora = filmes[0].inicio; hora <= filmes[0].fim; hora++){   // Verificação de horário disponível
-            if (horarios[hora] == 1){
+            if (horarios[hora] == 1 && hora != filmes[0].fim){
                 disponivel = false;
                 break;
             }
         }
         if(disponivel){
-            duracao = filmes[0].duracao;
             categorias[filmes[0].categoria-1] -= 1; 
-            for(int hora = filmes[0].inicio; hora <= filmes[0].fim; hora++){ 
+            for(int hora = filmes[0].inicio; hora < filmes[0].fim; hora++){ 
                 horarios[hora] = 1;
                 horarios.back() -= 1;
             }
             assistidos.push_back(filmes[0]);
             filmes.erase(filmes.begin());
             com_item = maior_valor(filmes, assistidos, melhor, categorias, horarios);  
+            adiciona += 1;
         }
     } 
     filmes2.erase(filmes2.begin());
-    int sem_item = maior_valor(filmes2, assistidos, melhor, categorias, horarios2); 
 
-    int valor_atual = 0;
-    int valor_melhor = 0;
-    for(auto& el:assistidos){
-        valor_atual += el.duracao;
-    }
-    for(auto& el:melhor){
-        valor_melhor += el.duracao;
-    }
+    int sem_item = maior_valor(filmes2, assistidos, melhor, categorias, horarios2);
+
+    int valor_atual = assistidos.size();
+    int valor_melhor = melhor.size();
     if(valor_atual > valor_melhor){
         melhor = assistidos;
     }
     assistidos.clear();
-    return max(sem_item, duracao + com_item + 1);
+    return max(sem_item, adiciona+com_item);
 }
 
 int main(){//int argc, char *argv[]){
