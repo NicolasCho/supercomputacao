@@ -104,26 +104,23 @@ int main(){//int argc, char *argv[]){
 
     int n_filmes = filmes.size();
     int max_val = 0;
-    omp_set_num_threads(4);
+    omp_set_num_threads(8);
 
     #pragma omp parallel
-    {   
-        #pragma omp single
-        {
-            int id, i, nthreads, istart, iend;
-            id = omp_get_thread_num();
-            nthreads = omp_get_num_threads();
-            istart = id*n_filmes /nthreads;
-            iend =(id+1) * n_filmes/nthreads;
-            if (id == nthreads - 1) iend = n_filmes;
-            for (i = istart; i < iend; i++){
-                #pragma omp task shared(max_val)
+    {     
+        int id, i, nthreads, istart, iend;
+        id = omp_get_thread_num();
+        nthreads = omp_get_num_threads();
+        istart = id*n_filmes /nthreads;
+        iend =(id+1) * n_filmes/nthreads;
+        if (id == nthreads - 1) iend = n_filmes;
+        for (i = istart; i < iend; i++){
+            #pragma omp task shared(max_val)
+            {
+                int value = maior_valor(filmes, assistidos, melhor, categorias, horarios, i);
+                #pragma omp critical
                 {
-                    int value = maior_valor(filmes, assistidos, melhor, categorias, horarios, i);
-                    #pragma omp critical
-                    {
-                        max_val = std::max(max_val, value);
-                    }
+                    max_val = std::max(max_val, value);
                 }
             }
         }
