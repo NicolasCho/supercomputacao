@@ -130,8 +130,6 @@ int main(){//int argc, char *argv[]){
     time = omp_get_wtime()-time;
     std::cout << "Tempo em segundos :" << time << endl;
 
-    std::cout << "Melhor alocação: " << max_val << endl;
-
     std::cout << "Número de filmes alocados: " << melhor.size() << endl;
 
     std::sort(melhor.begin(), melhor.end(), [](auto& i, auto& j){return i.id < j.id;});
