@@ -50,7 +50,7 @@ int main(){
       // Encontrar o número máximo de filmes que podem ser assistidos até o filme i e categoria j
       int max_count = 0;
       for (int k = 0; k < i; k++) {
-        if (categories[k] == j && end_times[k] <= start_times[i] && dp[(k*(M+1)) + j-1] + 1 <= L[j-1]) {
+        if (categories[k] == j && end_times[k] <= start_times[i] && dp[(k*(M+1)) + j-1] + 1 <= categories[j-1]) {
           max_count = max(max_count, dp[(k*(M+1)) + j-1] + 1);
         } else {
           max_count = max(max_count, dp[(k*(M+1)) + j]);
