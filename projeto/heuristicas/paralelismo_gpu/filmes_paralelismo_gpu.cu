@@ -46,7 +46,7 @@ int knapsack(int num_films, int num_categories, int* start_times, int* end_times
     thrust::device_vector<int> d_start_times(start_times, start_times + num_films);
     thrust::device_vector<int> d_end_times(end_times, end_times + num_films);
     thrust::device_vector<int> d_categories(categories, categories + num_films);
-    thrust::device_vector<int> d_L(L, L + num_categories + 1);
+    thrust::device_vector<int> d_L(L, L + num_categories);
 
     thrust::device_vector<int> d_results(num_films * num_categories, 0);
     thrust::device_vector<int> d_updated_results(num_films * num_categories, 0);
@@ -65,9 +65,9 @@ int knapsack(int num_films, int num_categories, int* start_times, int* end_times
                                                                    thrust::raw_pointer_cast(d_results.data()),
                                                                    num_films, num_categories));
 
-    thrust::copy(d_updated_results.begin(), d_updated_results.end(), d_results.begin());
+    //thrust::copy(d_updated_results.begin(), d_updated_results.end(), d_results.begin());
 
-    int max_value = thrust::reduce(thrust::device, d_results.begin(), d_results.end(), 0, thrust::maximum<int>());
+    int max_value = thrust::reduce(thrust::device, d_updated_results.begin(), d_updated_results.end(), 0, thrust::maximum<int>());
 
     return max_value;
 }
