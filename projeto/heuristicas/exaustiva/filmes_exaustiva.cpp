@@ -2,6 +2,8 @@
 #include <vector>
 #include <algorithm>
 #include <omp.h>
+#include <iostream>
+#include <fstream>
 using namespace std;
 
 struct filme{
@@ -56,12 +58,12 @@ int maior_valor(vector<filme> filmes, vector<filme>& assistidos, vector<filme>& 
     return max(sem_item, adiciona+com_item);
 }
 
-int main(){//int argc, char *argv[]){
+int main(int argc, char *argv[]){
     float time = omp_get_wtime();
 
-    //Recebe o nome da variavel testada e o nome do arquivo
-    // string variavel = argv[1]; 
-    // string arquivo = argv[2];
+    // Recebe o nome da variavel testada e o nome do arquivo
+    string variavel = argv[1]; 
+    string arquivo = argv[2];
 
     int n = 0;
     int c = 0;
@@ -101,20 +103,24 @@ int main(){//int argc, char *argv[]){
         filmes.push_back({i, inicio, fim, fim - inicio, categoria});
     }
 
-    int maior_tempo_tela = maior_valor(filmes, assistidos, melhor, categorias, horarios);
+    maior_valor(filmes, assistidos, melhor, categorias, horarios);
 
     time = omp_get_wtime()-time;
-    cout << "Tempo em segundos :" << time << endl;
+    
 
-    cout << "Melhor alocação: " << maior_tempo_tela << endl;
-
-    cout << "Número de filmes alocados: " << melhor.size() << endl;
-
-    sort(melhor.begin(), melhor.end(), [](auto& i, auto& j){return i.id < j.id;});
+    int duracao_total = 0;
     for(auto& el:melhor){
-        cout << el.id << " ";
+        duracao_total += el.duracao;
     }
-    cout << endl;
+
+    // Escreve novo resultado no csv
+    // Métricas: número de filmes alocados, quantidade de horas ocupadas, tempo de execução
+    ofstream outputFile;
+    string result_file = "../heuristicas/exaustiva/results.csv";  // Caminho relativo ao script que chama a heuristica
+    outputFile.open(result_file, ios::app);
+    string result = variavel + "," + to_string(melhor.size()) + "," + to_string(duracao_total) + 
+        "," + to_string(time) + "," + arquivo;
+    outputFile << result << endl;
 
     return 0;
 }
