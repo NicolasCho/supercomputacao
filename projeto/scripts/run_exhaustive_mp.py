@@ -3,7 +3,7 @@ import subprocess
 
 if __name__ == "__main__":
     dir_heu = "../heuristicas/exaustiva_paralela"
-    dir_inputs = "../inputs/VARIAVEL_FILME_10010filmes_5categorias_2media"
+    dir_inputs = "../inputs/VARIAVEL_FILME_41filmes_7categorias_2media"
 
     if os.path.exists(dir_heu + "/results.csv"):
         os.remove(dir_heu + "/results.csv")

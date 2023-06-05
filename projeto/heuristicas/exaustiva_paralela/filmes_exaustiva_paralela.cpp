@@ -17,6 +17,8 @@ struct filme{
 int maior_valor(vector<filme> filmes, vector<filme>& assistidos, vector<filme>& melhor, vector<int> categorias, vector<int> horarios, int index){
     vector<filme> filmes2 = filmes; 
     vector<int> horarios2 = horarios;
+    vector<filme> assistidos2 = assistidos;
+    vector<int> categorias2 = categorias;
     int adiciona = 0;
     int com_item = 0;
     bool disponivel = true;
@@ -47,7 +49,7 @@ int maior_valor(vector<filme> filmes, vector<filme>& assistidos, vector<filme>& 
     } 
     filmes2.erase(filmes2.begin());
 
-    int sem_item = maior_valor(filmes2, assistidos, melhor, categorias, horarios2, index-1);
+    int sem_item = maior_valor(filmes2, assistidos2, melhor, categorias2, horarios2, index-1);
 
     int valor_atual = assistidos.size();
     int valor_melhor = melhor.size();
