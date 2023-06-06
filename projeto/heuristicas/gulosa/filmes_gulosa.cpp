@@ -78,7 +78,9 @@ int main(int argc, char *argv[]){
     int duracao_total = 0;
     for(auto& el:lista_filmes){
         duracao_total += el.duracao;
+        std::cout << el.id << " ";
     }
+    std::cout << std::endl;
     
     // Escreve novo resultado no csv
     // Métricas: número de filmes alocados, quantidade de horas ocupadas, tempo de execução
