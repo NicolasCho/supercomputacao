@@ -1,10 +1,13 @@
+%%writefile paralelismo_gpu.cu
 #include <iostream>
 #include <vector>
 #include <algorithm>
 #include <thrust/host_vector.h>
 #include <thrust/device_vector.h>
 #include <thrust/functional.h>
-
+#include <omp.h>
+#include <fstream>
+using namespace std;
 struct filme {
     int id;
     int inicio;
@@ -13,7 +16,15 @@ struct filme {
     int categoria;
 };
 
-int main() {
+int main(int argc, char *argv[]){
+    clock_t start, end;
+    start = clock();
+
+    //Recebe o nome da variavel testada e o nome do arquivo
+    string variavel = argv[1]; 
+    string arquivo = argv[2];
+
+
     int N, M;
     std::cin >> N >> M;
 
@@ -50,7 +61,20 @@ int main() {
 
     int max_count = *thrust::max_element(dp.begin() + N * (M + 1) + 1, dp.begin() + (N + 1) * (M + 1));
 
-    std::cout << "Número máximo de filmes que podem ser assistidos: " << max_count << std::endl;
+    //std::cout << "Número máximo de filmes que podem ser assistidos: " << max_count << std::endl;
 
+
+    end = clock();
+    double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+
+
+    // Escreve novo resultado no csv
+    // Métricas: número de filmes alocados, quantidade de horas ocupadas, tempo de execução
+    ofstream outputFile;
+    string result_file = "results.csv";  // Caminho relativo ao script que chama a heuristica
+    outputFile.open(result_file, ios::app);
+    string result = variavel + "," + to_string(max_count) + "," + "0" + 
+        "," + to_string(time_taken) + "," + arquivo;
+    outputFile << result << endl;
     return 0;
 }
